@@ -9,12 +9,15 @@ import (
 )
 
 type Task struct {
-	ID      int  `json:"id"`
-	IS_Done bool `json:"is_Done"`
+	ID          int    `json:"id"`
+	Is_Done     bool   `json:"is_Done"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
-type Responce struct {
-	Task string `json:"task"`
+type Response struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
 }
 
 var db *gorm.DB
@@ -32,7 +35,10 @@ func initDB() {
 func GetHandler(c echo.Context) error {
 	var taskes []Task
 	if err := db.Find(&taskes).Error; err != nil {
-		return c.JSON(http.StatusBadRequest, Responce{Task: "Error"})
+		return c.JSON(http.StatusBadRequest, Response{
+			Status:  "Error",
+			Message: "The message was not delivered ",
+		})
 	}
 	return c.JSON(http.StatusOK, &taskes)
 }
@@ -40,20 +46,29 @@ func GetHandler(c echo.Context) error {
 func PostHandler(c echo.Context) error {
 	var task Task
 	if err := c.Bind(&task); err != nil {
-		return c.JSON(http.StatusBadRequest, Responce{Task: "error"})
+		return c.JSON(http.StatusBadRequest, Response{
+			Status:  "Error",
+			Message: "The message was not received",
+		})
 	}
 
 	if err := db.Create(&task).Error; err != nil {
-		return c.JSON(http.StatusBadRequest, Responce{Task: "error"})
+		return c.JSON(http.StatusBadRequest, Response{
+			Status:  "Error ",
+			Message: "The message was not updated",
+		})
 
 	}
-	return c.JSON(http.StatusOK, Responce{Task: "Ok"})
+	return c.JSON(http.StatusOK, Response{
+		Status:  "Ok",
+		Message: "The message was successful update",
+	})
 }
 
 func main() {
 	initDB()
 	e := echo.New()
-	e.GET("/api", GetHandler)
-	e.POST("/api", PostHandler)
+	e.GET("/api/task", GetHandler)
+	e.POST("/api/task", PostHandler)
 	e.Start("localhost:8080")
 }
