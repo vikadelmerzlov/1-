@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type Task struct {
@@ -32,7 +33,7 @@ func initDB() {
 	db.AutoMigrate(&Task{})
 }
 
-func GetHandler(c echo.Context) error {
+func getHandler(c echo.Context) error {
 	var taskes []Task
 	if err := db.Find(&taskes).Error; err != nil {
 		return c.JSON(http.StatusBadRequest, Response{
@@ -43,7 +44,7 @@ func GetHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, &taskes)
 }
 
-func PostHandler(c echo.Context) error {
+func postHandler(c echo.Context) error {
 	var task Task
 	if err := c.Bind(&task); err != nil {
 		return c.JSON(http.StatusBadRequest, Response{
@@ -59,16 +60,68 @@ func PostHandler(c echo.Context) error {
 		})
 
 	}
-	return c.JSON(http.StatusOK, Response{
+	return c.JSON(http.StatusOK, &task)
+}
+
+func patchHandler(c echo.Context) error {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, Response{
+			Status:  "Error",
+			Message: "Incorrect ID",
+		})
+	}
+
+	var updateTask Task
+	if err := c.Bind(&updateTask); err != nil {
+		return c.JSON(http.StatusBadRequest, Response{
+			Status:  "Error",
+			Message: "Invalid input",
+		})
+	}
+
+	if err := db.Model(&Task{}).Where("id=?", id).Update("description", updateTask.Description).Error; err != nil {
+		return c.JSON(http.StatusBadRequest, Response{
+			Status:  "Error",
+			Message: "The message was not updated",
+		})
+	}
+	return c.JSON(http.StatusOK, &Response{
 		Status:  "Ok",
-		Message: "The message was successful update",
+		Message: "The message successfully updated",
+	})
+}
+
+func deleteHandler(c echo.Context) error {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, Response{
+			Status:  "Error",
+			Message: "Incorrect ID",
+		})
+	}
+
+	if err := db.Delete(&Task{}, id).Error; err != nil {
+		return c.JSON(http.StatusBadRequest, Response{
+			Status:  "Error",
+			Message: "The message was not deleted",
+		})
+	}
+
+	return c.JSON(http.StatusOK, &Response{
+		Status:  "Ok",
+		Message: "The message successfully deleted",
 	})
 }
 
 func main() {
 	initDB()
 	e := echo.New()
-	e.GET("/api/task", GetHandler)
-	e.POST("/api/task", PostHandler)
+	e.GET("/api/tasks", getHandler)
+	e.POST("/api/tasks", postHandler)
+	e.PATCH("/api/tasks/:id", patchHandler)
+	e.DELETE("/api/tasks/:id", deleteHandler)
 	e.Start("localhost:8080")
 }
