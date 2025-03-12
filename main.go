@@ -87,10 +87,9 @@ func patchHandler(c echo.Context) error {
 			Message: "The message was not updated",
 		})
 	}
-	return c.JSON(http.StatusOK, &Response{
-		Status:  "Ok",
-		Message: "The message successfully updated",
-	})
+
+	updateTask.ID = id
+	return c.JSON(http.StatusOK, &updateTask)
 }
 
 func deleteHandler(c echo.Context) error {
@@ -110,10 +109,7 @@ func deleteHandler(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, &Response{
-		Status:  "Ok",
-		Message: "The message successfully deleted",
-	})
+	return c.NoContent(http.StatusOK)
 }
 
 func main() {
