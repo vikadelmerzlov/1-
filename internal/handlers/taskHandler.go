@@ -1,23 +1,78 @@
 package handlers
 
 import (
-	"github.com/labstack/echo/v4"
-	"net/http"
+	"context"
 	"pet_project_etap1/internal/taskService"
-	"strconv"
+	"pet_project_etap1/internal/web/tasks"
 )
-
-var nextID = 1
 
 type Handler struct {
 	Service *taskService.TaskService
 }
 
+/*
+	func (h *Handler) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject) (tasks.GetTasksResponseObject, error) {
+		//TODO implement me+
+		panic("implement me")
+	}
+
+	type Task struct {
+		ID          int    `json:"id"`
+		Is_Done     bool   `json:"is_Done"`
+		Title       string `json:"title"`
+		Description string `json:"description"`
+	}
+
+	func (h *Handler) PostTasks(_ context.Context, _ tasks.PostTasksRequestObject) (tasks.PostTasksResponseObject, error) {
+		//TODO implement me
+		panic("implement me")
+	}
+*/
 func NewHandler(service *taskService.TaskService) *Handler {
 	return &Handler{Service: service}
 }
 
-func (h *Handler) GetTasksHandler(c echo.Context) error {
+func (h *Handler) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject) (tasks.GetTasksResponseObject, error) {
+	getAllTasks, err := h.Service.GetAllTask()
+	if err != nil {
+		return nil, err
+	}
+	responce := tasks.GetTasks200JSONResponse{}
+
+	for _, tsk := range getAllTasks {
+		task := tasks.Task{
+			Description: &tsk.Description,
+			Id:          &tsk.ID,
+			IsDone:      &tsk.IsDone,
+			Title:       &tsk.Title,
+		}
+		responce = append(responce, task)
+	}
+	return responce, nil
+}
+
+func (h *Handler) PostTasks(_ context.Context, request tasks.PostTasksRequestObject) (tasks.PostTasksResponseObject, error) {
+	taskRequest := request.Body
+
+	taskToCreate := taskService.Task{
+		IsDone:      *taskRequest.IsDone,
+		Title:       *taskRequest.Title,
+		Description: *taskRequest.Description,
+	}
+	createdTask, err := h.Service.CreateTask(taskToCreate)
+	if err != nil {
+		return nil, err
+	}
+	response := tasks.PostTasks201JSONResponse{
+		Id:          &createdTask.ID,
+		IsDone:      &createdTask.IsDone,
+		Title:       &createdTask.Title,
+		Description: &createdTask.Description,
+	}
+	return response, nil
+}
+
+/*func (h *Handler) GetTasksHandler(c echo.Context) error {
 	tasks, err := h.Service.GetAllTask()
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
@@ -75,3 +130,4 @@ func (h *Handler) DeleteTask(c echo.Context) error {
 	}
 	return c.NoContent(http.StatusNoContent)
 }
+*/

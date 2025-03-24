@@ -2,9 +2,12 @@ package main
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"log"
 	"pet_project_etap1/internal/database"
 	"pet_project_etap1/internal/handlers"
 	"pet_project_etap1/internal/taskService"
+	"pet_project_etap1/internal/web/tasks"
 )
 
 /*
@@ -114,15 +117,20 @@ var db *gorm.DB
 func main() {
 	database.InitDB()
 
+	e := echo.New()
+
 	repo := taskService.NewTaskRepository(database.DB)
 	service := taskService.NewService(repo)
 
 	handler := handlers.NewHandler(service)
 
-	e := echo.New()
-	e.GET("/api/tasks", handler.GetTasksHandler)
-	e.POST("/api/tasks", handler.CreateTask)
-	e.PATCH("/api/tasks/:id", handler.UpdateTask)
-	e.DELETE("/api/tasks/:id", handler.DeleteTask)
-	e.Start("localhost:8070")
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	strictHandler := tasks.NewStrictHandler(handler, nil)
+	tasks.RegisterHandlers(e, strictHandler)
+
+	if err := e.Start(":8090"); err != nil {
+		log.Fatalf("failed to start with err: %v", err)
+	}
 }

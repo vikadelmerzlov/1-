@@ -7,9 +7,9 @@ type TaskRepository interface {
 	//Возвращаем массив из всех бд, и ошибку
 	CreateTask(task Task) (Task, error)
 	//Передаем в функцию task типа Task, и возвращаем созданный Task и err
-	UpdateTask(id int, task Task) (Task, error)
+	//UpdateTask(id int, task Task) (Task, error)
 	// UpdateTaskByID - Передаем id и Task, возвращаем обновленный Task и err
-	DeleteTask(id int) error
+	//DeleteTask(id int) error
 	// DeleteTaskByID - Передаем id для удаления, возвращаем только ошибку
 }
 
@@ -35,7 +35,7 @@ func (r *taskRepository) CreateTask(task Task) (Task, error) {
 	return task, nil
 }
 
-func (r *taskRepository) UpdateTask(id int, task Task) (Task, error) {
+/*func (r *taskRepository) UpdateTask(id int, task Task) (Task, error) {
 	if err := r.db.Model(&Task{}).Where("id=?", id).Update("description", task.Description).Error; err != nil {
 		return Task{}, err
 	}
@@ -47,4 +47,4 @@ func (r *taskRepository) DeleteTask(id int) error {
 		return err.Error
 	}
 	return nil
-}
+}*/
