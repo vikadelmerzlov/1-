@@ -130,7 +130,7 @@ func main() {
 	strictHandler := tasks.NewStrictHandler(handler, nil)
 	tasks.RegisterHandlers(e, strictHandler)
 
-	if err := e.Start(":8090"); err != nil {
+	if err := e.Start(":8040"); err != nil {
 		log.Fatalf("failed to start with err: %v", err)
 	}
 }

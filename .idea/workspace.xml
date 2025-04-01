@@ -23,8 +23,8 @@
   &quot;isMigrated&quot;: true
 }</component>
   <component name="ProblemsViewState">
+    <option name="proportion" value="0.9" />
     <option name="selectedTabId" value="CurrentFile" />
-    <option name="showPreview" value="true" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -104,8 +104,8 @@
     <list>
       <item itemvalue="Go Build.go build pet_project_etap1/cmd/app" />
       <item itemvalue="Makefile Target.gen" />
-      <item itemvalue="Makefile Target.migrate" />
       <item itemvalue="Makefile Target.migrate-down" />
+      <item itemvalue="Makefile Target.migrate" />
       <item itemvalue="Makefile Target.run" />
     </list>
     <recent_temporary>
@@ -121,8 +121,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-gosdk-d297c17c1fbd-57c114c3cede-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-243.24978.59" />
-        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-GO-243.24978.59" />
+        <option value="bundled-gosdk-d297c17c1fbd-57c114c3cede-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-243.26053.20" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-GO-243.26053.20" />
       </set>
     </attachedChunks>
   </component>
@@ -132,16 +132,5 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$USER_HOME$/go/pkg/mod/github.com/labstack/echo/v4@v4.13.3/middleware/rate_limiter.go</url>
-          <line>18</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

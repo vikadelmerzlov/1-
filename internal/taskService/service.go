@@ -17,11 +17,11 @@ func (s *TaskService) GetAllTask() ([]Task, error) {
 
 }
 
-/*func (s *TaskService) UpdateTask(id int, task Task) (Task, error) {
+func (s *TaskService) UpdateTask(id int, task Task) (Task, error) {
 	return s.repo.UpdateTask(id, task)
 }
 
 func (s *TaskService) DeleteTask(id int) error {
 	return s.repo.DeleteTask(id)
 
-}*/
+}

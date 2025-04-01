@@ -2,7 +2,7 @@ package taskService
 
 type Task struct {
 	ID          int    `json:"id"`
-	IsDone      bool   `json:"is_Done"`
+	Is_Done     bool   `json:"is_Done"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
