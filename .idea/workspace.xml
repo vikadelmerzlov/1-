@@ -39,6 +39,7 @@
     &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
     &quot;Go Build.go build main.go.executor&quot;: &quot;Run&quot;,
     &quot;Go Build.go build pet_project_etap1/cmd/app.executor&quot;: &quot;Run&quot;,
+    &quot;Makefile Target.-database.executor&quot;: &quot;Run&quot;,
     &quot;Makefile Target.gen.executor&quot;: &quot;Run&quot;,
     &quot;Makefile Target.migrate-down (1).executor&quot;: &quot;Run&quot;,
     &quot;Makefile Target.migrate-down.executor&quot;: &quot;Run&quot;,
@@ -53,7 +54,7 @@
     &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
     &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/afiya/OneDrive/Desktop/pet_project_etap1&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/afiya/OneDrive/Desktop/pet_project_etap1/migrations&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
@@ -61,10 +62,15 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\afiya\OneDrive\Desktop\pet_project_etap1\migrations" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\afiya\OneDrive\Desktop\pet_project_etap1\migrations" />
+      <recent name="C:\Users\afiya\OneDrive\Desktop\pet_project_etap1\migrations\users" />
+      <recent name="C:\Users\afiya\OneDrive\Desktop\pet_project_etap1\migrations\tasks" />
       <recent name="C:\Users\afiya\OneDrive\Desktop\pet_project_etap1" />
       <recent name="C:\Users\afiya\OneDrive\Desktop\pet_project_etap1\cmd\app" />
-      <recent name="C:\Users\afiya\OneDrive\Desktop\pet_project_etap1\cmd" />
     </key>
   </component>
   <component name="RunManager" selected="Go Build.go build pet_project_etap1/cmd/app">
@@ -75,6 +81,12 @@
       <package value="pet_project_etap1/cmd/app" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$/cmd/app/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="-database" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/makefile" target="-database" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
       <method v="2" />
     </configuration>
     <configuration name="gen" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
@@ -95,26 +107,20 @@
       </makefile>
       <method v="2" />
     </configuration>
-    <configuration name="run" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/makefile" target="run" workingDirectory="C:\Users\afiya\OneDrive\Desktop\pet_project_etap1" arguments="">
-        <envs />
-      </makefile>
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Go Build.go build pet_project_etap1/cmd/app" />
+      <item itemvalue="Makefile Target.-database" />
       <item itemvalue="Makefile Target.gen" />
       <item itemvalue="Makefile Target.migrate-down" />
       <item itemvalue="Makefile Target.migrate" />
-      <item itemvalue="Makefile Target.run" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build pet_project_etap1/cmd/app" />
+        <item itemvalue="Makefile Target.-database" />
+        <item itemvalue="Makefile Target.migrate" />
         <item itemvalue="Makefile Target.migrate-down" />
         <item itemvalue="Makefile Target.gen" />
-        <item itemvalue="Makefile Target.migrate" />
-        <item itemvalue="Makefile Target.run" />
       </list>
     </recent_temporary>
   </component>

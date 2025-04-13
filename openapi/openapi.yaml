@@ -62,6 +62,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
+               
     delete:
       summary: Delete a tasks
       operationId: "deleteTasks"
@@ -77,6 +78,80 @@ paths:
       responses:
         '204':
           description: The tasks successfully deleted
+  /users:
+    get :
+      summary: Get all users
+      tags:
+        - users
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create a new users
+      tags:
+        - users
+      requestBody:
+        description: The user to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: The created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{id}:
+    patch:
+      summary: Update a users
+      operationId: "updateUsers"
+      tags:
+        - users
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+            description: The id of user update
+      requestBody:
+        description: The users to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: The updated email and password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      summary: Delete a users
+      operationId: "deleteUsers"
+      tags:
+        - users
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+            description: id for deleted
+      responses:
+        '204':
+          description: The users successfully deleted
 components:
   schemas:
     Task:
@@ -89,4 +164,13 @@ components:
         title:
           type: string
         description:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        password:
           type: string

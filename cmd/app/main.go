@@ -7,7 +7,9 @@ import (
 	"pet_project_etap1/internal/database"
 	"pet_project_etap1/internal/handlers"
 	"pet_project_etap1/internal/taskService"
+	"pet_project_etap1/internal/userService"
 	"pet_project_etap1/internal/web/tasks"
+	"pet_project_etap1/internal/web/users"
 )
 
 /*
@@ -119,18 +121,26 @@ func main() {
 
 	e := echo.New()
 
-	repo := taskService.NewTaskRepository(database.DB)
-	service := taskService.NewService(repo)
+	repoTask := taskService.NewTaskRepository(database.DB)
+	serviceTask := taskService.NewService(repoTask)
 
-	handler := handlers.NewHandler(service)
+	taskHandler := handlers.NewTaskHandler(serviceTask)
+
+	repoUser := userService.NewUserRepository(database.DB)
+	serviceUser := userService.NewService(repoUser)
+	userHandler := handlers.NewUserHandler(serviceUser)
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	strictHandler := tasks.NewStrictHandler(handler, nil)
-	tasks.RegisterHandlers(e, strictHandler)
+	strictTaskHandler := tasks.NewStrictHandler(taskHandler, nil)
+	tasks.RegisterHandlers(e, strictTaskHandler)
+
+	strictUserHandler := users.NewStrictHandler(userHandler, nil)
+	users.RegisterHandlers(e, strictUserHandler)
 
 	if err := e.Start(":8040"); err != nil {
 		log.Fatalf("failed to start with err: %v", err)
 	}
+
 }

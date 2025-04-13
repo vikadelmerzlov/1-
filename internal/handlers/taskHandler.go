@@ -8,15 +8,15 @@ import (
 	"pet_project_etap1/internal/web/tasks"
 )
 
-type Handler struct {
+type HandlerTask struct {
 	Service *taskService.TaskService
 }
 
-func NewHandler(service *taskService.TaskService) *Handler {
-	return &Handler{Service: service}
+func NewTaskHandler(service *taskService.TaskService) *HandlerTask {
+	return &HandlerTask{Service: service}
 }
 
-func (h *Handler) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject) (tasks.GetTasksResponseObject, error) {
+func (h *HandlerTask) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject) (tasks.GetTasksResponseObject, error) {
 	getAllTasks, err := h.Service.GetAllTask()
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func (h *Handler) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject) (ta
 	return responce, nil
 }
 
-func (h *Handler) PostTasks(_ context.Context, request tasks.PostTasksRequestObject) (tasks.PostTasksResponseObject, error) {
+func (h *HandlerTask) PostTasks(_ context.Context, request tasks.PostTasksRequestObject) (tasks.PostTasksResponseObject, error) {
 	if request.Body == nil {
 		return nil, fmt.Errorf("error: request.Body = nil ")
 	}
@@ -71,39 +71,42 @@ func (h *Handler) PostTasks(_ context.Context, request tasks.PostTasksRequestObj
 	return response, nil
 }
 
-func (h *Handler) UpdateTasks(_ context.Context, request tasks.UpdateTasksRequestObject) (tasks.UpdateTasksResponseObject, error) {
+func (h *HandlerTask) UpdateTasks(_ context.Context, request tasks.UpdateTasksRequestObject) (tasks.UpdateTasksResponseObject, error) {
 	log.Println("Запрос на обновление задачи получен")
 	if request.Body == nil {
 		log.Println("error: request.Body = nil ")
 		return nil, fmt.Errorf("error: request.Body = nil ")
 	}
 	taskRequest := request.Body
-	/*Id := 0
+
+	var Id int
+
 	if taskRequest.Id != nil {
 		Id = *taskRequest.Id
 		log.Printf("Id: задачи для обновления %d", Id)
-	} /*else {
+	} else {
 		log.Println("error : id отсутствует")
-	}*/
+	}
+	Id = request.Id
 
-	/*IsDone := false
+	IsDone := false
 	if taskRequest.IsDone != nil {
 		IsDone = *taskRequest.IsDone
 	}
 	Title := ""
 	if taskRequest.Title != nil {
 		Title = *taskRequest.Title
-	}*/
+	}
 	Description := ""
 	if taskRequest.Description != nil {
 		Description = *taskRequest.Description
 	}
 
 	taskToUpdate := taskService.Task{
-		//Is_Done:     IsDone,
-		//Title:       Title,
+		Is_Done:     IsDone,
+		Title:       Title,
 		Description: Description,
-		//ID:          Id,
+		ID:          Id,
 	}
 
 	updatedTask, err := h.Service.UpdateTask(request.Id, taskToUpdate)
@@ -113,6 +116,9 @@ func (h *Handler) UpdateTasks(_ context.Context, request tasks.UpdateTasksReques
 
 	responce := tasks.UpdateTasks200JSONResponse{
 		Description: &updatedTask.Description,
+		Id:          &updatedTask.ID,
+		IsDone:      &updatedTask.Is_Done,
+		Title:       &updatedTask.Title,
 	}
 
 	/*responce := tasks.UpdateTask200JSONResponse{
@@ -125,10 +131,10 @@ func (h *Handler) UpdateTasks(_ context.Context, request tasks.UpdateTasksReques
 
 }
 
-func (h *Handler) DeleteTasks(_ context.Context, request tasks.DeleteTasksRequestObject) (tasks.DeleteTasksResponseObject, error) {
-	deleteTask := h.Service.DeleteTask(request.Id)
-	if deleteTask == nil {
-		return nil, deleteTask
+func (h *HandlerTask) DeleteTasks(_ context.Context, request tasks.DeleteTasksRequestObject) (tasks.DeleteTasksResponseObject, error) {
+	err := h.Service.DeleteTask(request.Id)
+	if err != nil {
+		return nil, err
 	}
 	deleteToTask := tasks.DeleteTasks204Response{}
 	return deleteToTask, nil
