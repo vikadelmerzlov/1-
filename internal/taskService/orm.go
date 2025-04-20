@@ -5,6 +5,7 @@ type Task struct {
 	Is_Done     bool   `json:"is_Done"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
+	UserID      int    `json:"user_id"`
 }
 
 /*type Response struct {

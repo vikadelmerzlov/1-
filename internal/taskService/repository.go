@@ -1,6 +1,10 @@
 package taskService
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+	"gorm.io/gorm"
+	"pet_project_etap1/internal/web/users"
+)
 
 type TaskRepository interface {
 	GetAllTasks() ([]Task, error)
@@ -11,6 +15,7 @@ type TaskRepository interface {
 	// UpdateTaskByID - Передаем id и Task, возвращаем обновленный Task и err
 	DeleteTask(id int) error
 	// DeleteTaskByID - Передаем id для удаления, возвращаем только ошибку
+	GetTasksByUserID(userID int) ([]Task, error)
 }
 
 type taskRepository struct {
@@ -27,9 +32,21 @@ func (r *taskRepository) GetAllTasks() ([]Task, error) {
 	return tasks, err
 }
 
-func (r *taskRepository) CreateTask(task Task) (Task, error) {
+func (r *taskRepository) GetTasksByUserID(userID int) ([]Task, error) {
+	var tasks []Task
+	err := r.db.Where("user_ID=?", userID).Find(&tasks).Error
+	fmt.Println("error finding tasks by user id:", userID)
+	return tasks, err
+}
 
+func (r *taskRepository) CreateTask(task Task) (Task, error) {
+	var user users.User
+	if err := r.db.First(&user, task.UserID).Error; err != nil {
+		fmt.Println("Error creating task", task)
+		return Task{}, err
+	}
 	if err := r.db.Create(&task).Error; err != nil {
+		fmt.Println("error creating tasks", task)
 		return Task{}, err
 	}
 	return task, nil

@@ -35,34 +35,72 @@ func (h *HandlerTask) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject)
 	return responce, nil
 }
 
+func (h *HandlerTask) GetTasksByUserID(_ context.Context, request tasks.GetTasksByUserIDRequestObject) (tasks.GetTasksByUserIDResponseObject, error) {
+	userID := request.UserId // Получаем ID из параметров URL
+	tasksByUserID, err := h.Service.GetTasksByUserID(userID)
+	if err != nil {
+		return nil, err // Важно обрабатывать ошибки
+	}
+
+	responce := tasks.GetTasksByUserID200JSONResponse{}
+	for _, tsk := range tasksByUserID {
+		task := tasks.Task{
+			Description: &tsk.Description,
+			Id:          &tsk.ID,
+			IsDone:      &tsk.Is_Done,
+			Title:       &tsk.Title,
+			UserId:      &tsk.UserID,
+		}
+		responce = append(responce, task)
+	}
+
+	return responce, nil
+}
+
 func (h *HandlerTask) PostTasks(_ context.Context, request tasks.PostTasksRequestObject) (tasks.PostTasksResponseObject, error) {
 	if request.Body == nil {
-		return nil, fmt.Errorf("error: request.Body = nil ")
+		return nil, fmt.Errorf("error: request.Body = nil")
 	}
 	taskRequest := request.Body
+	//userID := *taskRequest.UserId
+	userID := 0
+	if taskRequest.UserId != nil {
+		userID = *taskRequest.UserId
+		fmt.Printf("userID: %d\n", userID)
+	}
 	IsDone := false
 	if taskRequest.IsDone != nil {
 		IsDone = *taskRequest.IsDone
+		fmt.Printf("IsDone: %v\n", IsDone)
 	}
+
 	Title := ""
 	if taskRequest.Title != nil {
 		Title = *taskRequest.Title
+		fmt.Printf("Title: %s\n", Title)
 	}
 	Description := ""
 	if taskRequest.Description != nil {
 		Description = *taskRequest.Description
+		fmt.Printf("Description: %s\n", Description)
 	}
 
 	taskToCreate := taskService.Task{
 		Is_Done:     IsDone,
 		Title:       Title,
 		Description: Description,
+		UserID:      userID,
 	}
+	fmt.Println(taskToCreate)
 	createdTask, err := h.Service.CreateTask(taskToCreate)
 	if err != nil {
+		// **Логирование ошибки!**
+		log.Printf("Error creating task in service: %v\n", err)
 		return nil, err
 	}
+
 	response := tasks.PostTasks201JSONResponse{
+		UserId:      &createdTask.UserID,
 		Id:          &createdTask.ID,
 		IsDone:      &createdTask.Is_Done,
 		Title:       &createdTask.Title,
@@ -121,12 +159,6 @@ func (h *HandlerTask) UpdateTasks(_ context.Context, request tasks.UpdateTasksRe
 		Title:       &updatedTask.Title,
 	}
 
-	/*responce := tasks.UpdateTask200JSONResponse{
-	//Id:          &updatedTask.ID,
-	Description: &updatedTask.Description,
-	/*IsDone:      &updatedTask.Is_Done,
-	Title:       &updatedTask.Title,*/
-	//}
 	return responce, nil
 
 }
@@ -139,83 +171,3 @@ func (h *HandlerTask) DeleteTasks(_ context.Context, request tasks.DeleteTasksRe
 	deleteToTask := tasks.DeleteTasks204Response{}
 	return deleteToTask, nil
 }
-
-/*
-var nextID int
-
-	func (h *Handler) GetTasksHandler(c echo.Context) error {
-		tasks, err := h.Service.GetAllTask()
-		if err != nil {
-			return c.NoContent(http.StatusBadRequest)
-		}
-		return c.JSON(http.StatusOK, &tasks)
-	}
-
-	func (h *Handler) CreateTask(c echo.Context) error {
-		var task taskService.Task
-		if err := c.Bind(&task); err != nil {
-			return c.NoContent(http.StatusBadRequest)
-		}
-
-		createdTask, err := h.Service.CreateTask(task)
-		if err != nil {
-			return c.NoContent(http.StatusBadRequest)
-		}
-		createdTask = task
-		createdTask.ID = nextID
-		nextID++
-
-		return c.JSON(http.StatusOK, createdTask)
-
-	func (h *Handler) UpdateTask(c echo.Context) error {
-		idParam := c.Param("id")
-		id, err := strconv.Atoi(idParam)
-		if err != nil {
-			return c.NoContent(http.StatusBadRequest)
-		}
-
-		var updateTask taskService.Task
-		if err := c.Bind(&updateTask); err != nil {
-			return c.NoContent(http.StatusBadRequest)
-		}
-		updateTsk, err := h.Service.UpdateTask(id, updateTask)
-
-		if err != nil {
-			return c.NoContent(http.StatusBadRequest)
-		}
-		updateTsk.ID = id
-		return c.JSON(http.StatusOK, &updateTsk)
-
-}
-*/
-/*func (h *Handler) DeleteTask(c echo.Context) error {
-	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
-	if err != nil {
-		return c.NoContent(http.StatusBadRequest)
-	}
-	err = h.Service.DeleteTask(id)
-	if err != nil {
-		return c.NoContent(http.StatusBadRequest)
-	}
-	return c.NoContent(http.StatusNoContent)
-}
-
-/*
-	func (h *Handler) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject) (tasks.GetTasksResponseObject, error) {
-		//TODO implement me+
-		panic("implement me")
-	}
-
-	type Task struct {
-		ID          int    `json:"id"`
-		Is_Done     bool   `json:"is_Done"`
-		Title       string `json:"title"`
-		Description string `json:"description"`
-	}
-
-	func (h *Handler) PostTasks(_ context.Context, _ tasks.PostTasksRequestObject) (tasks.PostTasksResponseObject, error) {
-		//TODO implement me
-		panic("implement me")
-	}
-*/

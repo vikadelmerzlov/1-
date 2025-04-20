@@ -1,5 +1,7 @@
 package taskService
 
+import "fmt"
+
 type TaskService struct {
 	repo TaskRepository
 }
@@ -9,7 +11,13 @@ func NewService(repo TaskRepository) *TaskService {
 }
 
 func (s *TaskService) CreateTask(task Task) (Task, error) {
+	fmt.Println("task in service", task)
 	return s.repo.CreateTask(task)
+}
+
+func (s *TaskService) GetTasksByUserID(userID int) ([]Task, error) {
+	return s.repo.GetTasksByUserID(userID)
+
 }
 
 func (s *TaskService) GetAllTask() ([]Task, error) {

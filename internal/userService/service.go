@@ -1,15 +1,21 @@
 package userService
 
+import "pet_project_etap1/internal/taskService"
+
 type UserService struct {
 	repo UserRepository
 }
 
-func NewService(repo UserRepository) *UserService {
+func NewService(repo *userRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
 func (u *UserService) GetUsers() ([]User, error) {
 	return u.repo.GetUsers()
+}
+
+func (u *UserService) GetTasksByUserID(userId int) ([]taskService.Task, error) {
+	return u.repo.GetTasksByUserID(userId)
 }
 
 func (u *UserService) CreateUser(user User) (User, error) {
